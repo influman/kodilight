@@ -1,0 +1,94 @@
+{
+    "plugin_id": "kodilight",
+    "name_fr": "KODIlight",
+    "icon": "kodilight.png",
+    "version": "1.1",
+    "creation_date": "2017-12-17",
+    "modification_date": "2017-12-18",
+    "author": "Influman",
+    "description_fr": "Génération de règles pour associer un éclairage aux actions <a href='https://kodi.tv' target='_blank'>KODI</a><br>Nécessite le plugin KODIControl installé au préalable",
+    "description_en": "",
+    "forum_link": "",
+    "parameters":
+        [
+			{
+                "parameter": "KODI", 
+                "description": "KODI-Contrôles : ",
+                "xtype": "combo",
+				"field": "store : getCombo('/json/list_all.php?value_type=list&actuator_only=1'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: false"
+			},
+			{
+                "parameter": "STATUT", 
+                "description": "KODI-Statut : ",
+                "xtype": "combo",
+				"field": "store : getCombo('/json/list_all.php?value_type=string'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: false"
+			},
+			{
+                "parameter": "NAME", 
+                "description": "Nom : ",
+                "xtype": "textfield",
+				"default_value": "Lampe 1",
+				"field": "width:150, allowBlank:false"
+			},			
+			{
+                "parameter": "LAMPE", 
+                "description": "Eclairage : ",
+                "xtype": "combo",
+				"field": "store : getCombo('/json/list_all.php?value_type=list&actuator_only=1&has_value=0,100'), displayField: 'label', valueField: 'id', typeAhead: true, forceSelection: true, triggerAction: 'all', selectOnFocus: true, editable: false, shadow:true, mode: 'local', width: 250, listWidth: 300, allowBlank: false"
+			}			
+  		],
+   	
+	"rules": [
+      {
+        "name_fr": "KODI Light - plugin.parameters.NAME - Nouvelle Lecture",
+        "criterias":
+        [
+          { "device_id": "plugin.parameters.KODI", "type": "d", "criteria": "==", "target": "0"  },
+		  { "operation" : "OR", "device_id": "plugin.parameters.STATUT", "type": "d", "criteria": "!=", "target": "--"  },
+		  { "device_id": "plugin.parameters.LAMPE", "type": "e", "criteria": "==", "target": "100"  }
+		],
+        "actions":
+        [
+          { "device_id": "plugin.parameters.LAMPE", "type": "direct", "action": "0"}
+        ]
+      },
+	  {
+        "name_fr": "KODI Light - plugin.parameters.NAME - Pause",
+        "criterias":
+        [
+          { "device_id": "plugin.parameters.KODI", "type": "t", "criteria": "==", "target": "0"  },
+		  { "device_id": "plugin.parameters.KODI", "type": "i", "criteria": "==", "target": "0"  },
+		  { "device_id": "plugin.parameters.LAMPE", "type": "e", "criteria": "==", "target": "0"  }
+		],
+        "actions":
+        [
+          { "device_id": "plugin.parameters.LAMPE", "type": "direct", "action": "100"}
+        ]
+      },
+	  {
+        "name_fr": "KODI Light - plugin.parameters.NAME - Reprise Lecture",
+        "criterias":
+        [
+          { "device_id": "plugin.parameters.KODI", "type": "t", "criteria": "==", "target": "0"  },
+		  { "device_id": "plugin.parameters.KODI", "type": "i", "criteria": "==", "target": "0"  },
+		  { "device_id": "plugin.parameters.LAMPE", "type": "e", "criteria": "==", "target": "100"  }
+		],
+        "actions":
+        [
+          { "device_id": "plugin.parameters.LAMPE", "type": "direct", "action": "0"}
+        ]
+      },
+	  {
+        "name_fr": "KODI Light - plugin.parameters.NAME - Stop",
+        "criterias":
+        [
+          { "device_id": "plugin.parameters.KODI", "type": "d", "criteria": "==", "target": "1"  },
+		  { "device_id": "plugin.parameters.LAMPE", "type": "e", "criteria": "==", "target": "0"  }
+		],
+        "actions":
+        [
+          { "device_id": "plugin.parameters.LAMPE", "type": "direct", "action": "100"}
+        ]
+      }
+    ]
+}
